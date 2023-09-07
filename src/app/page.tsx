@@ -27,7 +27,7 @@ export default function Home() {
   return (
     <>
       <Banner title={dataBanner.title} description={dataBanner.description}/>
-      <section>
+      <section className='flex justify-center items-start my-10'>
         {
           dataFeatureCard.map((data, index) => (
             <FeatureCard 

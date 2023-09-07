@@ -2,31 +2,33 @@ import Image from "next/image";
 import logo from '@/assets/images/argentBankLogo.png'
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleUser } from "@fortawesome/free-regular-svg-icons";
+import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 
 export default function Header() {
   return (
-    <header>
-      <Link href={'/'} >
+    <header className="w-100 flex flex-row justify-between items-center px-5 py-2">
+      <Link href={'/'} className="flex-4">
         <Image 
             src={logo}
             alt=''
-            width={300}
+            width={200}
         />
       </Link>
-      <Link href={'/signin'}>
-          <FontAwesomeIcon icon={faCircleUser} width={30} color="black"/>
-          Sign In
-      </Link>
-      <Link href={'/dashboard'}>
-          <FontAwesomeIcon icon={faCircleUser} width={30} color="black"/>
-          Tony
-      </Link>
-      <Link href={'/'}>
-          <FontAwesomeIcon icon={faRightFromBracket} width={30} color="black"/>
-          Sign Out
-      </Link>
+      <div className="flex justify-around gap-5">
+        <Link href={'/signin'} className="flex gap-2 items-center font-bold">
+            <FontAwesomeIcon icon={faCircleUser} width={20}/>
+            Sign In
+        </Link>
+        <Link href={'/dashboard'} className="flex gap-2 items-center font-bold">
+            <FontAwesomeIcon icon={faCircleUser} width={20}/>
+            Tony
+        </Link>
+        <Link href={'/'} className="flex gap-2 items-center font-bold">
+            <FontAwesomeIcon icon={faRightFromBracket} width={20}/>
+            Sign Out
+        </Link>
+      </div>
     </header>
   )
 }

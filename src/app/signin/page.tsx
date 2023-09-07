@@ -1,7 +1,7 @@
 'use client'
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleUser } from "@fortawesome/free-regular-svg-icons";
+import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
 
 export default function SignInPage() {
 
@@ -10,24 +10,24 @@ export default function SignInPage() {
     }
 
     return (
-      <section>
-        <div>
-          <FontAwesomeIcon icon={faCircleUser} width={30} color="black"/>
-          <h1>Sign In</h1>
+      <section className="h-full flex justify-center bg-background-primary">
+        <div className="w-80 h-96 text-center bg-white mt-10 px-5 py-5">
+          <FontAwesomeIcon icon={faCircleUser} className="text-lg" color="black"/>
+          <h1 className="font-bold my-4 text-2xl">Sign In</h1>
           <form onSubmit={() => handleSubmit()}>
-            <div>
-              <label htmlFor="username">username</label>
-              <input type="text" name="username" id="username" />
+            <div className="text-left font-bold mb-5">
+              <label className='block' htmlFor="username">Username</label>
+              <input className='border border-black h-9 w-full' type="text" name="username" id="username" />
             </div>
-            <div>
-              <label htmlFor="password">password</label>
-              <input type="text" name="password" id="password" />
+            <div className="text-left font-bold mb-5">
+              <label className='block' htmlFor="password">Password</label>
+              <input className='border border-black h-9 w-full' type="text" name="password" id="password" />
             </div>
-            <div>
+            <div className="text-left mb-5">
               <input type="checkbox" name="rememberMe" id="rememberMe" />
-              <label htmlFor="rememberMe">Remember me</label>
+              <label className='pl-3' htmlFor="rememberMe">Remember me</label>
             </div>
-            <button type="submit">Sign In</button>
+            <button className="bg-color-primary w-full text-white py-2 font-bold underline  underline-offset-1" type="submit">Sign In</button>
           </form>
         </div>
       </section>

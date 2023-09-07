@@ -21,21 +21,22 @@ const dataTransactionCard = [
 export default function DashboardPage() {
   return (
     <>
-      <section>
-        <h1>Welcome back</h1>
-        <button>Edit Name</button>
-      </section>
-      <section>
-        {
-          dataTransactionCard.map((data, index) => (
-            <TransactionCard 
-              key={index}
-              type={data.type}
-              sum={data.sum}
-              state={data.state}
-            />
-          ))
-        }
+      <section className="h-full flex flex-col items-center pt-10 bg-background-primary">
+        <h1 className="text-4xl text-white mb-4 font-medium">Welcome back</h1>
+        <button className="btn-primary">Edit Name</button>
+        
+        <div className="w-10/12 mt-10">
+          {
+            dataTransactionCard.map((data, index) => (
+              <TransactionCard 
+                key={index}
+                type={data.type}
+                sum={data.sum}
+                state={data.state}
+              />
+            ))
+          }
+        </div>
       </section>
     </>
   )
