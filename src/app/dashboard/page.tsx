@@ -23,8 +23,7 @@ export default function DashboardPage() {
     <>
       <section className="h-full flex flex-col items-center pt-10 bg-background-primary">
         <h1 className="text-4xl text-white mb-4 font-medium">Welcome back</h1>
-        <button className="btn-primary">Edit Name</button>
-        
+        <button className="bg-color-primary text-sm text-white py-2 px-4 border-r-2 border-b-2 border-gray-600 font-bold w-auto">Edit Name</button>
         <div className="w-10/12 mt-10">
           {
             dataTransactionCard.map((data, index) => (

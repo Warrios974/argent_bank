@@ -7,7 +7,7 @@ import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 
 export default function Header() {
   return (
-    <header className="w-100 flex flex-row justify-between items-center px-5 py-2">
+    <header className="w-full flex flex-row justify-between items-center px-5 py-2">
       <Link href={'/'} className="flex-4">
         <Image 
             src={logo}

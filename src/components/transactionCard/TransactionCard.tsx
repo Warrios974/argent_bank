@@ -3,13 +3,13 @@ import Link from "next/link"
 
 export default function TransactionCard({ type, sum, state} : TransactionInfoProps) {
   return (
-    <div className="w-full flex justify-between items-center bg-white p-5 mb-6">
-        <div className="flex flex-col ">
+    <div className="w-full flex flex-col justify-between items-center bg-white p-5 mb-6 md:flex-row">
+        <div className="w-full flex flex-col">
             <span>{type}</span>
-            <span className="font-bold text-4xl">${sum}</span>
+            <span className="font-bold text-5xl">${sum}</span>
             <span>{state}</span>
         </div>
-        <div>
+        <div className="w-full mt-5 md:mt-O">
             <button className="btn-primary">View transactions</button>
         </div>
     </div>
