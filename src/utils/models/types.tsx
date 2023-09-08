@@ -1,5 +1,13 @@
 import { StaticImageData } from "next/image"
 
+// Redux State
+export interface UserState {
+    id : string,
+    name : string,
+    isConnected : boolean
+}
+
+// Components
 export type BannerProps = {
     title : string,
     description : string
