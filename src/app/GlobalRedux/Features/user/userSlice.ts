@@ -3,6 +3,7 @@
 import { createSlice } from "@reduxjs/toolkit"
 import { UserState } from "@/utils/models/types"
 
+//local storage
 const initialState: UserState = {
     id : 'string',
     name : 'string',
