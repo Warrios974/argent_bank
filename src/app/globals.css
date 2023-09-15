@@ -19,3 +19,7 @@
 .btn-primary{
   @apply w-full bg-color-primary text-lg text-white py-2 px-4 border-r-2 border-b-2 border-gray-600 font-bold md:w-auto
 }
+
+.input{
+  @apply h-10 p-4 rounded-sm
+}

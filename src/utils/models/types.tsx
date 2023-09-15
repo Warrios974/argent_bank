@@ -24,3 +24,7 @@ export type TransactionInfoProps = {
     sum : number,
     state : string
 }
+
+export type ChangeInfoUserProps = {
+    displayForm : React.Dispatch<React.SetStateAction<boolean>>
+}
