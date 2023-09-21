@@ -29,7 +29,7 @@ const dataTransactionCard = [
 export default function DashboardPage() {
 
   const token = useSelector((state: RootState) => state.user.token);
-  const state = useSelector((state: RootState) => state.user);
+  const firstName = useSelector((state: RootState) => state.user.firstName);
   const dispatch = useDispatch()
 
   const { data, isLoading, error } = useQuery('userInfos', async () => {
@@ -66,14 +66,10 @@ export default function DashboardPage() {
 
   const [displayForm, setDisplayForm] = useState(false)
 
-  console.log('====');
-  console.log('state',state);
-  console.log('====');
-
   return (
     <>
       <section className="h-full flex flex-col items-center pt-10 bg-background-primary">
-        <h1 className="text-4xl text-white mb-4 font-medium">Welcome back</h1>
+        <h1 className="text-4xl text-white mb-4 font-medium">Welcome back <br/> {firstName} </h1>
         {displayForm && <ChangeInfoUser displayForm={setDisplayForm}/>}
         {!displayForm && <button
           className="bg-color-primary text-sm text-white py-2 px-4 border-r-2 border-b-2 border-gray-600 font-bold w-auto"
