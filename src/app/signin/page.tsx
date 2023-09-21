@@ -7,11 +7,12 @@ import { useSelector, useDispatch } from "react-redux"
 import { connection } from "../GlobalRedux/Features/user/userSlice";
 import { ChangeEvent, useEffect, useState } from "react";
 import { redirect } from 'next/navigation'
+import animation from './animation.module.css'
 
 const INITIAL_STATE = {
   email: 'tony@stark.com',
   password: 'password123',
-  remenbered: false
+  remenberMe: false
 };
 
 export default function SignInPage() {
@@ -20,6 +21,9 @@ export default function SignInPage() {
     const dispatch = useDispatch()
 
     const [dataForm, setDataForm] = useState(INITIAL_STATE)
+    const [emailError, setEmailError] = useState(false)
+    const [serverError, setServerError] = useState(false)
+    const [btnDisable, setBtnDisable] = useState(false)
 
     useEffect(() => {
       const redirectfunction = () => {
@@ -30,14 +34,26 @@ export default function SignInPage() {
       redirectfunction()
     }, [connected])
 
+    const [isClient, setIsClient] = useState(false)
+ 
+    useEffect(() => {
+      setIsClient(true)
+    }, [])
+
     const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault()
-      console.log('====');
-      console.log('dataForm',{
-        "email": dataForm.email,
-        "password": dataForm.password,
-      });
-      console.log('====');
+      setServerError(false)
+      setBtnDisable(true)
+      
+      const regexEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
+
+      if (!dataForm.email.match(regexEmail)) {
+        setEmailError(true)
+        return
+      }
+
+      setEmailError(false)
+
       try {
         const response = await fetch('http://localhost:3001/api/v1/user/login', {
           method: "POST", 
@@ -51,16 +67,22 @@ export default function SignInPage() {
 
         const token = data.body.token
 
-        console.log('====');
-        console.log('data',token);
-        console.log('====');
-        return dispatch(connection(token))
-      } catch (error) {
-        
+        const args = {
+          token: token,
+          remenberMe: dataForm.remenberMe
+        }
 
-        console.log('====');
-        console.log('error',error);
-        console.log('====');
+        setTimeout(() => {
+          dispatch(connection(args))
+        }, 2000)
+
+        return 
+      } catch (error) {
+        setTimeout(() => {
+          setBtnDisable(false)
+          setServerError(true)
+        }, 2000)
+
       }
 
     }
@@ -69,10 +91,6 @@ export default function SignInPage() {
       
       const value = e.target.value
       const id = e.target.id
-
-      const regexEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
-
-      if (id === 'email' && !value.match(regexEmail)) return
 
       setDataForm({
         ...dataForm,
@@ -83,34 +101,32 @@ export default function SignInPage() {
     const handleChangeCheckBox = () => {
       setDataForm({
         ...dataForm,
-        remenbered: !dataForm.remenbered,
+        remenberMe: !dataForm.remenberMe,
       })
       
     }
-
-    console.log('====');
-    console.log('connected',connected);
-    console.log('====');
     
-    return (
+    if(isClient) return (
       <section className="h-full flex justify-center bg-background-primary">
-        <div className="w-80 h-96 text-center bg-white mt-10 px-5 py-5">
+        <div className="w-80 h-fit text-center bg-white mt-10 px-5 py-5">
           <FontAwesomeIcon icon={faCircleUser} className="text-lg" color="black"/>
           <h1 className="font-bold my-4 text-2xl">Sign In</h1>
           <form onSubmit={(e) => handleSubmit(e)}>
             <div className="text-left font-bold mb-5">
               <label className='block' htmlFor="Email">Email</label>
-              <input className='border border-black h-9 w-full' type="email" name="email" id="email"
+              <input className={`border border-black h-9 w-full`} type="email" name="email" id="email"
                 onChange={(e) => handleChange(e)}
                 value={dataForm.email}
               />
+              {emailError && <span className="block border border-red-600 bg-red-700 text-white text-center p-4 mt-2">Email incorrect</span>}
             </div>
             <div className="text-left font-bold mb-5">
               <label className='block' htmlFor="password">Password</label>
-              <input className='border border-black h-9 w-full' type="text" name="password" id="password" 
+              <input className='border border-black h-9 w-full' type="password" name="password" id="password" 
                 onChange={(e) => handleChange(e)}
                 value={dataForm.password}
               />
+              {serverError && <span className="block border border-red-600 bg-red-700 text-white text-center p-4 mt-2">Votre mot de passe ou votre email est incorrect, veillez vérifier ces informations</span>}
             </div>
             <div className="text-left mb-5">
               <input type="checkbox" name="rememberMe" id="rememberMe" 
@@ -118,7 +134,15 @@ export default function SignInPage() {
               />
               <label className='pl-3' htmlFor="rememberMe">Remember me</label>
             </div>
-            <button className="bg-color-primary w-full text-white py-2 font-bold underline  underline-offset-1" type="submit">Sign In</button>
+            <button className={`${btnDisable ? 'bg-gray-300' : 'bg-color-primary'} w-full text-white py-2 font-bold underline  underline-offset-1`} type="submit" disabled={btnDisable}>
+              {!btnDisable && 'Sign In'}
+              {btnDisable && <span className={animation.ldsRing}>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+              </span>}
+            </button>
           </form>
         </div>
       </section>

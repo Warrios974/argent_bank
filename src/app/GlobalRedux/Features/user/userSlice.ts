@@ -8,13 +8,17 @@ const initialState: UserState = {
     firstName : '',
     lastName : '',
     token : '',
+    remenberMe: false
 }
 
 export const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers:{
-        connection : (state, action) => { state.token = action.payload },
+        connection : (state, action) => { 
+            state.token = action.payload.token 
+            state.remenberMe = action.payload.remenberMe
+        },
         logout : (state) => {  },
     }
 })

@@ -4,7 +4,8 @@ import { StaticImageData } from "next/image"
 export interface UserState {
     firstName : string,
     lastName : string,
-    token : string
+    token : string,
+    remenberMe: boolean,
 }
 
 // Components
