@@ -5,17 +5,17 @@ import { UserState } from "@/utils/models/types"
 
 //local storage
 const initialState: UserState = {
-    id : 'string',
-    name : 'string',
-    isConnected : false
+    firstName : '',
+    lastName : '',
+    token : '',
 }
 
 export const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers:{
-        connection : (state) => { state.isConnected = true;},
-        logout : (state) => { state.isConnected = false },
+        connection : (state, action) => { state.token = action.payload },
+        logout : (state) => {  },
     }
 })
 
