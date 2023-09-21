@@ -2,7 +2,10 @@
 
 import ChangeInfoUser from "@/components/forms/ChangeInfoUser"
 import TransactionCard from "@/components/transactionCard/TransactionCard"
+import { RootState } from "../GlobalRedux/store";
+import { useSelector, useDispatch } from "react-redux"
 import { useState } from "react"
+import { useQuery } from "react-query"
 
 const dataTransactionCard = [
   {
@@ -23,7 +26,26 @@ const dataTransactionCard = [
 ]
 
 export default function DashboardPage() {
+  
+  const token = useSelector((state: RootState) => state.user.token);
 
+  console.log('====');
+  console.log('token',token);
+  console.log('====');
+
+  const { data, isLoading, error } = useQuery('userInfos', async () => {
+    const response = await fetch('http://localhost:3001/api/v1/user/profile', {
+      method: "POST", 
+      headers: new Headers({ 'Authorization' : `Bearer ${token}`}),
+    })
+
+    const data = await response.json()
+    console.log('====');
+    console.log('data',data);
+    console.log('====');
+    return data
+  })
+  
   const [displayForm, setDisplayForm] = useState(false)
 
   return (
