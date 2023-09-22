@@ -17,8 +17,10 @@ const INITIAL_STATE = {
 
 export default function SignInPage() {
 
-    const connected = useSelector((state: RootState) => state.user.token);
+    const token = useSelector((state: RootState) => state.user.token);
     const dispatch = useDispatch()
+
+    const tokenInlocalStorage = localStorage.getItem("connexion");
 
     const [dataForm, setDataForm] = useState(INITIAL_STATE)
     const [emailError, setEmailError] = useState(false)
@@ -27,12 +29,22 @@ export default function SignInPage() {
 
     useEffect(() => {
       const redirectfunction = () => {
-        if (connected) {
+        if (token) {
           redirect('/dashboard')
         }
       }
       redirectfunction()
-    }, [connected])
+    }, [token])
+    
+    useEffect(() => {
+      const redirectfunction = () => {
+        if (tokenInlocalStorage) {
+          const connexion = JSON.parse(tokenInlocalStorage)
+          dispatch(connection(connexion))
+        }
+      }
+      redirectfunction()
+    }, [dispatch, tokenInlocalStorage])
 
     const [isClient, setIsClient] = useState(false)
  

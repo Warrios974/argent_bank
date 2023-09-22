@@ -1,3 +1,4 @@
+import { updateUserData } from "@/app/GlobalRedux/Features/user/userSlice"
 import { RootState } from "@/app/GlobalRedux/store"
 import { ChangeInfoUserProps } from "@/utils/models/types"
 import { ChangeEvent, useState } from "react"
@@ -8,6 +9,7 @@ export default function ChangeInfoUser({ displayForm } : ChangeInfoUserProps) {
 
     const firstName = useSelector((state: RootState) => state.user.firstName)
     const lastName = useSelector((state: RootState) => state.user.lastName)
+    const token = useSelector((state: RootState) => state.user.token)
     
     const INITIAL_STATE_FORM = {
         firstName: firstName,
@@ -24,8 +26,12 @@ export default function ChangeInfoUser({ displayForm } : ChangeInfoUserProps) {
         displayForm(false)
     }
 
-    const handleSubmit = () => {
-        
+    const handleSubmit = async () => {
+        await dispatch(updateUserData({
+            firstName: dataForm.firstName,
+            lastName: dataForm.lastName,
+            token: token
+        }))
     }
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {

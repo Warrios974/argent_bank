@@ -18,8 +18,21 @@ export const userSlice = createSlice({
         connection : (state, action) => { 
             state.token = action.payload.token 
             state.remenberMe = action.payload.remenberMe
+
+            const connexion = JSON.stringify({token: action.payload.token, remenberMe: action.payload.remenberMe})
+
+            const tokenInLocalStorage = localStorage.getItem('connexion')
+            if(!tokenInLocalStorage) localStorage.setItem('connexion', connexion)
         },
-        updateUser: (state, action) => {
+        initUserData: (state, action) => {
+
+            const firstName = action.payload.firstName
+            const lastName = action.payload.lastName
+
+            state.firstName = firstName
+            state.lastName = lastName
+        },
+        updateUserData : (state, action) => { 
 
             const firstName = action.payload.firstName
             const lastName = action.payload.lastName
@@ -31,6 +44,6 @@ export const userSlice = createSlice({
     }
 })
 
-export const { connection, logout, updateUser } = userSlice.actions
+export const { connection, logout, initUserData, updateUserData } = userSlice.actions
 
 export default userSlice.reducer

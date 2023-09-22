@@ -1,12 +1,17 @@
 'use client'
 
-import { configureStore } from "@reduxjs/toolkit"
+import { configureStore, applyMiddleware } from "@reduxjs/toolkit"
 import userReducer from "./Features/user/userSlice"
+import thunkMiddleware from "redux-thunk"
+import { customMiddleware } from "./middleware"
+
 
 export const store = configureStore({
     reducer:{
-        user: userReducer
-    }
+        user: userReducer,
+    },
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware().concat(thunkMiddleware, customMiddleware),
 })
 
 export type RootState = ReturnType<typeof store.getState>
