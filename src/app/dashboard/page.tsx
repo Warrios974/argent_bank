@@ -56,9 +56,6 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const updateUserData = async () => {
-      console.log('====');
-      console.log('error',error);
-      console.log('====');
       if (data && !isLoading) {
         const firstName = data.body.firstName
         const lastName = data.body.lastName
