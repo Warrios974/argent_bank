@@ -2,9 +2,9 @@ import { StaticImageData } from "next/image"
 
 // Redux State
 export interface UserState {
-    firstName : string,
-    lastName : string,
-    token : string,
+    firstName : string | null,
+    lastName : string | null,
+    token : string | null,
     remenberMe: boolean,
 }
 
