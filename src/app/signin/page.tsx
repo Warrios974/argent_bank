@@ -20,8 +20,6 @@ export default function SignInPage() {
     const token = useSelector((state: RootState) => state.user.token);
     const dispatch = useDispatch()
 
-    const tokenInlocalStorage = localStorage.getItem("connexion");
-
     const [dataForm, setDataForm] = useState(INITIAL_STATE)
     const [emailError, setEmailError] = useState(false)
     const [serverError, setServerError] = useState(false)
@@ -37,6 +35,7 @@ export default function SignInPage() {
     }, [token])
     
     useEffect(() => {
+      const tokenInlocalStorage = localStorage.getItem("connexion") ? localStorage.getItem("connexion") : null;
       const redirectfunction = () => {
         if (tokenInlocalStorage) {
           const connexion = JSON.parse(tokenInlocalStorage)
@@ -44,7 +43,7 @@ export default function SignInPage() {
         }
       }
       redirectfunction()
-    }, [dispatch, tokenInlocalStorage])
+    }, [dispatch])
 
     const [isClient, setIsClient] = useState(false)
  
@@ -90,6 +89,7 @@ export default function SignInPage() {
 
         return 
       } catch (error) {
+        //https://stackoverflow.com/questions/33289726/combination-of-async-function-await-settimeout
         setTimeout(() => {
           setBtnDisable(false)
           setServerError(true)
