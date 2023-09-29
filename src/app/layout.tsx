@@ -3,7 +3,6 @@ import './globals.css'
 import Footer from '@/components/footer/Footer'
 import Header from '@/components/header/Header'
 import Providers from './GlobalRedux/provider'
-
 export default function RootLayout({
   children,
   params
@@ -28,3 +27,4 @@ export default function RootLayout({
     </html>
   )
 }
+

@@ -7,16 +7,21 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/app/GlobalRedux/store";
-import { logOut } from "@/app/GlobalRedux/Features/user/userSlice";
+import { AppDispatch, RootState } from "@/app/GlobalRedux/store";
+import { connection, fetchUserData, logOut } from "@/app/GlobalRedux/Features/user/userSlice";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { Connexion } from "@/utils/models/types";
 
 export default function Header() {
 
   const firstName = useSelector((state: RootState) => state.user.firstName)
   const token = useSelector((state: RootState) => state.user.token);
+  const loading = useSelector((state: RootState) => state.user.loading);
+  const error = useSelector((state: RootState) => state.user.error);
 
-  const dispatch =  useDispatch()
+
+  const dispatch =  useDispatch<AppDispatch>()
   const router = useRouter()
 
   function handleLogOut(e: React.MouseEvent<HTMLElement>): void {
@@ -26,7 +31,23 @@ export default function Header() {
 
     router.push('/signin')
   }
+  
+  useEffect(() => {
+    const tokenInlocalStorage = localStorage.getItem("connexion") ? localStorage.getItem("connexion") : null;
+    const connexionFunction = () => {
+      if (tokenInlocalStorage) {
+        const connexion : Connexion = JSON.parse(tokenInlocalStorage)
+        dispatch(connection(connexion))
+        dispatch(fetchUserData(connexion.token))
+      }
+    }
+    connexionFunction()
+  }, [dispatch])
 
+  console.log('====');
+  console.log('loading',loading);
+  console.log('error',error);
+  console.log('====');
 
   return (
     <header className="w-full flex flex-row justify-between items-center px-5 py-2">

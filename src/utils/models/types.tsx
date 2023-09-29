@@ -5,6 +5,8 @@ export interface UserState {
     firstName : string | null,
     lastName : string | null,
     token : string | null,
+    loading : boolean | null,
+    error : string | undefined | null,
     remenberMe: boolean,
 }
 
@@ -28,4 +30,9 @@ export type TransactionInfoProps = {
 
 export type ChangeInfoUserProps = {
     displayForm : React.Dispatch<React.SetStateAction<boolean>>
+}
+
+export type Connexion = {
+    token : string,
+    remenberMe: boolean
 }

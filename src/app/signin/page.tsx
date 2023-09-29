@@ -2,9 +2,9 @@
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
-import { RootState } from "../GlobalRedux/store";
+import { AppDispatch, RootState } from "../GlobalRedux/store";
 import { useSelector, useDispatch } from "react-redux"
-import { connection } from "../GlobalRedux/Features/user/userSlice";
+import { connection, fetchUserData } from "../GlobalRedux/Features/user/userSlice";
 import { ChangeEvent, useEffect, useState } from "react";
 import { redirect } from 'next/navigation'
 import animation from './animation.module.css'
@@ -18,7 +18,7 @@ const INITIAL_STATE = {
 export default function SignInPage() {
 
     const token = useSelector((state: RootState) => state.user.token);
-    const dispatch = useDispatch()
+    const dispatch = useDispatch<AppDispatch>()
 
     const [dataForm, setDataForm] = useState(INITIAL_STATE)
     const [emailError, setEmailError] = useState(false)
@@ -33,17 +33,6 @@ export default function SignInPage() {
       }
       redirectfunction()
     }, [token])
-    
-    useEffect(() => {
-      const tokenInlocalStorage = localStorage.getItem("connexion") ? localStorage.getItem("connexion") : null;
-      const redirectfunction = () => {
-        if (tokenInlocalStorage) {
-          const connexion = JSON.parse(tokenInlocalStorage)
-          dispatch(connection(connexion))
-        }
-      }
-      redirectfunction()
-    }, [dispatch])
 
     const [isClient, setIsClient] = useState(false)
  
@@ -76,7 +65,7 @@ export default function SignInPage() {
         })
         const data = await response.json()
 
-        const token = data.body.token
+        const token : string = data.body.token
 
         const args = {
           token: token,
@@ -85,6 +74,7 @@ export default function SignInPage() {
 
         setTimeout(() => {
           dispatch(connection(args))
+          dispatch(fetchUserData(args.token))
         }, 2000)
 
         return 

@@ -48,35 +48,6 @@ export default function DashboardPage() {
     redirectfunction()
   }, [token])
 
-  const { data, isLoading, error } = useQuery('userInfos', async () => {
-
-      const response = await fetch('http://localhost:3001/api/v1/user/profile', {
-        method: "POST",
-        headers: new Headers({ 'Authorization' : `Bearer ${token}`}),
-      })
-      const data = await response.json()
-      return data
-
-  })
-
-  useEffect(() => {
-    const updateUserData = async () => {
-      if (data && !isLoading) {
-        const firstName = data.body.firstName
-        const lastName = data.body.lastName
-        
-        const args = {
-          firstName : firstName,
-          lastName : lastName
-        }
-
-        await dispatch(initUserData(args))
-      }
-    }
-
-    updateUserData()
-  }, [data, dispatch, isLoading])
-
   return (
     <>
       <section className="h-full flex flex-col items-center pt-10 bg-background-primary">
