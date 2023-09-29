@@ -20,18 +20,20 @@ export default function ChangeInfoUser({ displayForm } : ChangeInfoUserProps) {
 
     const dispatch = useDispatch()
 
-    const regex = "/^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u"
-
     const handleCancelClick = () => {
         displayForm(false)
     }
 
-    const handleSubmit = async () => {
-        await dispatch(updateUserData({
-            firstName: dataForm.firstName,
-            lastName: dataForm.lastName,
-            token: token
-        }))
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault()
+        if (dataForm !== INITIAL_STATE_FORM) {
+            dispatch(updateUserData({
+                firstName: dataForm.firstName,
+                lastName: dataForm.lastName,
+                token: token
+            }))
+            displayForm(false)
+        }
     }
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -45,25 +47,21 @@ export default function ChangeInfoUser({ displayForm } : ChangeInfoUserProps) {
         })
     }
 
-    console.log('====');
-    console.log('dataForm',dataForm);
-    console.log('====');
-
   return (
-    <form className="flex items-center gap-4" onSubmit={() => handleSubmit()}>
-        <fieldset className="flex flex-col gap-4">
-            <input type="text" id="firstName" placeholder={firstName} pattern={regex}
+    <form className="w-10/12 flex flex-col items-center gap-4" onSubmit={(e) => handleSubmit(e)}>
+        <fieldset className="w-full flex flex-col md:flex-row md:justify-center gap-4">
+            <input type="text" id="firstName" placeholder={firstName ? firstName : ''} pattern="[A-Za-z]{2,32}" minLength={2}
                 className="input" onChange={(e) => handleChange(e)}
                 />
-                <div className="text-right">
-                    <button className="btn-primary w-10" type="submit">Save</button>
-                </div>
+            <input type="text" id="lastName" placeholder={lastName ? lastName : ''} pattern="[A-Za-z]{2,32}" minLength={2}
+                className="input" onChange={(e) => handleChange(e)}
+                />
         </fieldset>
-        <div className="w-full flex flex-col gap-4">
-            <input type="text" id="lastName" placeholder={lastName} pattern={regex}
-                className="input" onChange={(e) => handleChange(e)}
-                />
-            <div className="text-left">
+        <div className="w-full flex justify-center flex-row gap-4">
+            <div className="w-full text-right">
+                <button className="btn-primary w-10" type="submit">Save</button>
+            </div>
+            <div className="w-full text-left">
                 <button className="btn-primary" onClick={() => handleCancelClick()}>Cancel</button>
             </div>
         </div>
