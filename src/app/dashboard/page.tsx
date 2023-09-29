@@ -29,30 +29,35 @@ const dataTransactionCard = [
 
 export default function DashboardPage() {
 
-  const token = useSelector((state: RootState) => state.user.token);
+  const tokenInState = useSelector((state: RootState) => state.user.token);
   const firstName = useSelector((state: RootState) => state.user.firstName);
+  const lastName = useSelector((state: RootState) => state.user.lastName);
+  const state = useSelector((state: RootState) => state.user);
+  const [token, setToken] = useState(tokenInState)
+
   const dispatch = useDispatch()
   
   const [displayForm, setDisplayForm] = useState(false)
-  const connexionInLocalStorage = localStorage.getItem("connexion");
-  const connexion = connexionInLocalStorage && JSON.parse(connexionInLocalStorage)
-
+  
   useEffect(() => {
-    if (connexionInLocalStorage) {
-      dispatch(connection(connexion))
+    const redirectfunction = () => {
+      if (!token) {
+        redirect('/signin')
+      }
     }
-  }, [dispatch, connexionInLocalStorage, connexion])
+    redirectfunction()
+  }, [token])
 
   const { data, isLoading, error } = useQuery('userInfos', async () => {
-      const currentToken = token !== '' ? token : connexion.token
+
       const response = await fetch('http://localhost:3001/api/v1/user/profile', {
         method: "POST",
-        headers: new Headers({ 'Authorization' : `Bearer ${currentToken}`}),
+        headers: new Headers({ 'Authorization' : `Bearer ${token}`}),
       })
       const data = await response.json()
       return data
+
   })
-  
 
   useEffect(() => {
     const updateUserData = async () => {
@@ -75,13 +80,12 @@ export default function DashboardPage() {
   return (
     <>
       <section className="h-full flex flex-col items-center pt-10 bg-background-primary">
-        <h1 className="text-4xl text-white mb-4 font-medium text-center">Welcome back <br/> {firstName} </h1>
+        <h1 className="text-4xl text-white mb-4 font-medium text-center">Welcome back <br/> {firstName + " " + lastName} !</h1>
         {displayForm && <ChangeInfoUser displayForm={setDisplayForm}/>}
         {!displayForm && <button
           className="bg-color-primary text-sm text-white py-2 px-4 border-r-2 border-b-2 border-gray-600 font-bold w-auto"
           onClick={() => setDisplayForm(true)}
           >
-
           Edit Name
         </button>}
         <div className="w-10/12 mt-10">

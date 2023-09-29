@@ -4,16 +4,16 @@ import { createSlice } from "@reduxjs/toolkit"
 import { UserState } from "@/utils/models/types"
 
 //local storage
-const initialState: UserState = {
-    firstName : '',
-    lastName : '',
-    token : '',
+const INITIAL_STATE: UserState = {
+    firstName : null,
+    lastName : null,
+    token : null,
     remenberMe: false
 }
 
 export const userSlice = createSlice({
     name: 'user',
-    initialState,
+    initialState: INITIAL_STATE,
     reducers:{
         connection : (state, action) => { 
             state.token = action.payload.token 
@@ -40,10 +40,15 @@ export const userSlice = createSlice({
             state.firstName = firstName
             state.lastName = lastName
         },
-        logout : (state) => {  },
+        logOut : (state) => { 
+            state.firstName = null
+            state.lastName = null
+            state.token = null
+            state.remenberMe = false
+        },
     }
 })
 
-export const { connection, logout, initUserData, updateUserData } = userSlice.actions
+export const { connection, logOut, initUserData, updateUserData } = userSlice.actions
 
 export default userSlice.reducer
