@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
 import { AppDispatch, RootState } from "../GlobalRedux/store";
 import { useSelector, useDispatch } from "react-redux"
-import { connection, fetchUserData } from "../GlobalRedux/Features/user/userSlice";
+import { connexion, fetchConnexionUser, fetchUserData } from "../GlobalRedux/Features/user/userSlice";
 import { ChangeEvent, useEffect, useState } from "react";
 import { redirect } from 'next/navigation'
 import animation from './animation.module.css'
@@ -18,6 +18,9 @@ const INITIAL_STATE = {
 export default function SignInPage() {
 
     const token = useSelector((state: RootState) => state.user.token);
+    const loading = useSelector((state: RootState) => state.user.loading);
+    const error = useSelector((state: RootState) => state.user.error);
+  
     const dispatch = useDispatch<AppDispatch>()
 
     const [dataForm, setDataForm] = useState(INITIAL_STATE)
@@ -34,11 +37,32 @@ export default function SignInPage() {
       redirectfunction()
     }, [token])
 
+    useEffect(() => {
+      const redirectfunction = () => {
+        if (token) {
+          redirect('/dashboard')
+        }
+      }
+      redirectfunction()
+    }, [error])
+
     const [isClient, setIsClient] = useState(false)
  
     useEffect(() => {
       setIsClient(true)
     }, [])
+
+    const timeout = () => {return new Promise(resolve => setTimeout(resolve, 2000));}
+
+    const updateFrom = () => {
+      setBtnDisable(false)
+      setServerError(true)
+    }
+
+    const wait = async () => {
+      await timeout
+      return updateFrom()
+    }
 
     const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault()
@@ -54,40 +78,15 @@ export default function SignInPage() {
 
       setEmailError(false)
 
-      try {
-        const response = await fetch('http://localhost:3001/api/v1/user/login', {
-          method: "POST", 
-          headers: new Headers({ 'Content-Type': 'application/json'}),
-          body: JSON.stringify({
-            "email": dataForm.email,
-            "password": dataForm.password,
-          })
-        })
-        const data = await response.json()
-
-        const token : string = data.body.token
-
-        const args = {
-          token: token,
-          remenberMe: dataForm.remenberMe
-        }
-
-        setTimeout(() => {
-          dispatch(connection(args))
-          dispatch(fetchUserData(args.token))
-        }, 2000)
-
-        return 
-      } catch (error) {
-        //https://stackoverflow.com/questions/33289726/combination-of-async-function-await-settimeout
-        setTimeout(() => {
-          setBtnDisable(false)
-          setServerError(true)
-        }, 2000)
-
+      const args = {
+        email: dataForm.email,
+        password: dataForm.password
       }
 
+      dispatch(fetchConnexionUser(args))
+
     }
+
     
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
       

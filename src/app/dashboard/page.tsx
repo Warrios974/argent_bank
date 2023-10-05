@@ -5,8 +5,6 @@ import TransactionCard from "@/components/transactionCard/TransactionCard"
 import { RootState } from "../GlobalRedux/store";
 import { useSelector, useDispatch } from "react-redux"
 import { useEffect, useState } from "react"
-import { useQuery } from "react-query"
-import { connection, initUserData } from "../GlobalRedux/Features/user/userSlice";
 import { redirect } from "next/navigation";
 
 const dataTransactionCard = [
@@ -32,10 +30,7 @@ export default function DashboardPage() {
   const tokenInState = useSelector((state: RootState) => state.user.token);
   const firstName = useSelector((state: RootState) => state.user.firstName);
   const lastName = useSelector((state: RootState) => state.user.lastName);
-  const state = useSelector((state: RootState) => state.user);
   const [token, setToken] = useState(tokenInState)
-
-  const dispatch = useDispatch()
   
   const [displayForm, setDisplayForm] = useState(false)
   

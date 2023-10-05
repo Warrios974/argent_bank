@@ -6,8 +6,7 @@ export interface UserState {
     lastName : string | null,
     token : string | null,
     loading : boolean | null,
-    error : string | undefined | null,
-    remenberMe: boolean,
+    error : string | undefined | null
 }
 
 // Components
@@ -33,6 +32,6 @@ export type ChangeInfoUserProps = {
 }
 
 export type Connexion = {
-    token : string,
-    remenberMe: boolean
+    email : string,
+    password: string
 }

@@ -8,7 +8,7 @@ import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/app/GlobalRedux/store";
-import { connection, fetchUserData, logOut } from "@/app/GlobalRedux/Features/user/userSlice";
+import { connexion, fetchUserData, logOut } from "@/app/GlobalRedux/Features/user/userSlice";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Connexion } from "@/utils/models/types";
@@ -36,9 +36,11 @@ export default function Header() {
     const tokenInlocalStorage = localStorage.getItem("connexion") ? localStorage.getItem("connexion") : null;
     const connexionFunction = () => {
       if (tokenInlocalStorage) {
-        const connexion : Connexion = JSON.parse(tokenInlocalStorage)
-        dispatch(connection(connexion))
-        dispatch(fetchUserData(connexion.token))
+        const connexionData : Connexion = JSON.parse(tokenInlocalStorage)
+        dispatch(fetchUserData(connexionData.token))
+        /*PUT /account/{id}/transactions
+        PUT/transaction/{id}
+        POST /transaction/{id}*/
       }
     }
     connexionFunction()

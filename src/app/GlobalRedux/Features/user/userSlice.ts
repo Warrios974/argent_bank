@@ -1,7 +1,7 @@
 'use client'
 
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import { UserState } from "@/utils/models/types"
+import { Connexion, UserState } from "@/utils/models/types"
 
 //local storage
 const INITIAL_STATE: UserState = {
@@ -10,18 +10,35 @@ const INITIAL_STATE: UserState = {
     token : null,
     loading : null,
     error: null,
-    remenberMe: false
 }
 
 // Créez une action asynchrone avec createAsyncThunk
 export const fetchUserData = createAsyncThunk('user/fetchUserData', async (token : string) => {
+  try {
+      const response = await fetch('http://localhost:3001/api/v1/user/profile', {
+        method: "POST",
+        headers: new Headers({ 'Authorization' : `Bearer ${token}` }),
+      });
+      console.log(await response.status);
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      throw error; // Lancez l'erreur pour qu'elle soit gérée par createAsyncThunk
+    }
+});
+
+export const fetchConnexionUser = createAsyncThunk('user/fetchConnexionUser', async ({email, password}: Connexion) => {
     try {
-        const response = await fetch('http://localhost:3001/api/v1/user/profile', {
-          method: "POST",
-          headers: new Headers({ 'Authorization' : `Bearer ${token}` }),
-        });
-        const data = await response.json();
-        return data;
+      const response = await fetch('http://localhost:3001/api/v1/user/login', {
+        method: "POST", 
+        headers: new Headers({ 'Content-Type': 'application/json'}),
+        body: JSON.stringify({
+          "email": email,
+          "password": password,
+        })
+      })
+      const data = await response.json()
+      return data;
       } catch (error) {
         throw error; // Lancez l'erreur pour qu'elle soit gérée par createAsyncThunk
       }
@@ -31,9 +48,8 @@ export const userSlice = createSlice({
     name: 'user',
     initialState: INITIAL_STATE,
     reducers:{
-        connection : (state, action) => { 
+        connexion : (state, action) => { 
             state.token = action.payload.token 
-            state.remenberMe = action.payload.remenberMe
 
             const connexion = JSON.stringify({token: action.payload.token, remenberMe: action.payload.remenberMe})
 
@@ -60,7 +76,6 @@ export const userSlice = createSlice({
             state.firstName = null
             state.lastName = null
             state.token = null
-            state.remenberMe = false
         },
     },
     extraReducers: (builder) => {
@@ -78,10 +93,10 @@ export const userSlice = createSlice({
           .addCase(fetchUserData.rejected, (state, action) => {
             state.loading = false;
             state.error = action.error.message;
-          });
+          })
     }
 })
 
-export const { connection, logOut, initUserData, updateUserData } = userSlice.actions
+export const { connexion, logOut, initUserData, updateUserData } = userSlice.actions
 
 export default userSlice.reducer
