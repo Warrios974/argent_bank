@@ -8,46 +8,50 @@ import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
 import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/app/GlobalRedux/store";
-import { connexion, fetchUserData, logOut } from "@/app/GlobalRedux/Features/user/userSlice";
+import { addToken, fetchUserData, logOut } from "@/app/GlobalRedux/Features/user/userSlice";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { Connexion } from "@/utils/models/types";
 
 export default function Header() {
 
   const firstName = useSelector((state: RootState) => state.user.firstName)
+  const error = useSelector((state: RootState) => state.user.error)
   const token = useSelector((state: RootState) => state.user.token);
-  const loading = useSelector((state: RootState) => state.user.loading);
-  const error = useSelector((state: RootState) => state.user.error);
-
 
   const dispatch =  useDispatch<AppDispatch>()
   const router = useRouter()
 
   function handleLogOut(e: React.MouseEvent<HTMLElement>): void {
     e.preventDefault();
-
     dispatch(logOut());
-
     router.push('/signin')
   }
   
   useEffect(() => {
+    const tokenInSessionStorage = sessionStorage.getItem("connexion") ? sessionStorage.getItem("connexion") : null;
     const tokenInlocalStorage = localStorage.getItem("connexion") ? localStorage.getItem("connexion") : null;
     const connexionFunction = () => {
       if (tokenInlocalStorage) {
-        const connexionData : Connexion = JSON.parse(tokenInlocalStorage)
+        const connexionData = JSON.parse(tokenInlocalStorage)
+        dispatch(addToken(connexionData))
         dispatch(fetchUserData(connexionData.token))
         /*PUT /account/{id}/transactions
         PUT/transaction/{id}
         POST /transaction/{id}*/
       }
+      if (tokenInSessionStorage) {
+        const connexionData = JSON.parse(tokenInSessionStorage)
+        dispatch(addToken(connexionData))
+        dispatch(fetchUserData(connexionData.token))
+      }
     }
     connexionFunction()
-  }, [dispatch])
+  }, [])
 
   console.log('====');
-  console.log('loading',loading);
+  console.log('token',token);
+  console.log('====');
+  console.log('====');
   console.log('error',error);
   console.log('====');
 
@@ -65,7 +69,7 @@ export default function Header() {
             <FontAwesomeIcon icon={faCircleUser} width={20}/>
             Sign In
         </Link>}
-        {token && 
+        {(token && firstName) && 
         <>
           <Link href={'/dashboard'} className="flex gap-2 items-center font-bold">
               <FontAwesomeIcon icon={faCircleUser} width={20}/>

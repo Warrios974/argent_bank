@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleUser } from "@fortawesome/free-solid-svg-icons";
 import { AppDispatch, RootState } from "../GlobalRedux/store";
 import { useSelector, useDispatch } from "react-redux"
-import { connexion, fetchConnexionUser, fetchUserData } from "../GlobalRedux/Features/user/userSlice";
+import { fetchConnexionUser, fetchUserData } from "../GlobalRedux/Features/user/userSlice";
 import { ChangeEvent, useEffect, useState } from "react";
 import { redirect } from 'next/navigation'
 import animation from './animation.module.css'
@@ -12,21 +12,38 @@ import animation from './animation.module.css'
 const INITIAL_STATE = {
   email: 'tony@stark.com',
   password: 'password123',
-  remenberMe: false
+  rememberMe: false
 };
 
 export default function SignInPage() {
 
     const token = useSelector((state: RootState) => state.user.token);
-    const loading = useSelector((state: RootState) => state.user.loading);
+    const rememberMe = useSelector((state: RootState) => state.user.rememberMe);
     const error = useSelector((state: RootState) => state.user.error);
   
     const dispatch = useDispatch<AppDispatch>()
 
     const [dataForm, setDataForm] = useState(INITIAL_STATE)
     const [emailError, setEmailError] = useState(false)
+    const [loginError, setLoginError] = useState(false)
     const [serverError, setServerError] = useState(false)
     const [btnDisable, setBtnDisable] = useState(false)
+
+    const timeout = () => {return new Promise(resolve => setTimeout(resolve, 2000));}
+
+    const ERROR_LOGIN = () => {
+      setBtnDisable(false)
+      setServerError(true)
+    }
+    const ERROR_SERVER = () => {
+      setBtnDisable(false)
+      setLoginError(true)
+    }
+
+    const wait = async (fn: () => void) => {
+      await timeout
+      return fn()
+    }
 
     useEffect(() => {
       const redirectfunction = () => {
@@ -36,14 +53,17 @@ export default function SignInPage() {
       }
       redirectfunction()
     }, [token])
-
+    
     useEffect(() => {
-      const redirectfunction = () => {
-        if (token) {
-          redirect('/dashboard')
+      const errorState = () => {
+        if (error === '400') {
+          wait(ERROR_LOGIN)
+        }
+        if (error === 'Failed to fetch') {
+          wait(ERROR_SERVER)
         }
       }
-      redirectfunction()
+      errorState()
     }, [error])
 
     const [isClient, setIsClient] = useState(false)
@@ -51,18 +71,6 @@ export default function SignInPage() {
     useEffect(() => {
       setIsClient(true)
     }, [])
-
-    const timeout = () => {return new Promise(resolve => setTimeout(resolve, 2000));}
-
-    const updateFrom = () => {
-      setBtnDisable(false)
-      setServerError(true)
-    }
-
-    const wait = async () => {
-      await timeout
-      return updateFrom()
-    }
 
     const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault()
@@ -80,7 +88,8 @@ export default function SignInPage() {
 
       const args = {
         email: dataForm.email,
-        password: dataForm.password
+        password: dataForm.password,
+        rememberMe: dataForm.rememberMe
       }
 
       dispatch(fetchConnexionUser(args))
@@ -102,7 +111,7 @@ export default function SignInPage() {
     const handleChangeCheckBox = () => {
       setDataForm({
         ...dataForm,
-        remenberMe: !dataForm.remenberMe,
+        rememberMe: !dataForm.rememberMe,
       })
       
     }
@@ -127,11 +136,13 @@ export default function SignInPage() {
                 onChange={(e) => handleChange(e)}
                 value={dataForm.password}
               />
-              {serverError && <span className="block border border-red-600 bg-red-700 text-white text-center p-4 mt-2">Votre mot de passe ou votre email est incorrect, veillez vérifier ces informations</span>}
+              {serverError && <span className="block border border-red-600 bg-red-700 text-white text-center p-4 mt-2">Votre mot de passe ou votre email est incorrect, veuillez vérifier ces informations</span>}
+              {loginError && <span className="block border border-red-600 bg-red-700 text-white text-center p-4 mt-2">Nous avons rencontré un problème pour contacter le serveur, veuillez réessayer ultérieurement</span>}
             </div>
             <div className="text-left mb-5">
               <input type="checkbox" name="rememberMe" id="rememberMe" 
                 onChange={() => handleChangeCheckBox()}
+                defaultChecked={rememberMe}
               />
               <label className='pl-3' htmlFor="rememberMe">Remember me</label>
             </div>

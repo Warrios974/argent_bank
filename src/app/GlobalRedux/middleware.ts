@@ -17,13 +17,22 @@ export const customMiddleware = (store: any) => (next :any) => async (action: an
           })
         })
 
-        return next(action);
+        return next(action)
     }
 
     if (thisAction === 'user/logOut') {
       localStorage.removeItem('connexion')
-      return next(action);
+      sessionStorage.removeItem('connexion')
+      return next(action)
     }
 
-    return next(action);
+    if (thisAction === 'user/fetchUserData/rejected') {
+      if(action.error.message === 'Failed to fetch'){
+        localStorage.removeItem('connexion')
+        sessionStorage.removeItem('connexion')
+      }
+      return next(action)
+    }
+
+    return next(action)
 };
