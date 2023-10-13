@@ -29,8 +29,6 @@ export default function SignInPage() {
     const [serverError, setServerError] = useState(false)
     const [btnDisable, setBtnDisable] = useState(false)
 
-    const timeout = () => {return new Promise(resolve => setTimeout(resolve, 2000));}
-
     const ERROR_LOGIN = () => {
       setBtnDisable(false)
       setServerError(true)
@@ -40,9 +38,19 @@ export default function SignInPage() {
       setLoginError(true)
     }
 
+    const ERROR_EMAIL = () => {
+      setBtnDisable(false)
+      setEmailError(true)
+    }
+
+    const timeout = (fn: () => void) => {
+      return new Promise(() => setTimeout(() => {
+        fn()
+      }, 2000));
+    }
+
     const wait = async (fn: () => void) => {
-      await timeout
-      return fn()
+      return await timeout(fn)
     }
 
     useEffect(() => {
@@ -80,7 +88,7 @@ export default function SignInPage() {
       const regexEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
 
       if (!dataForm.email.match(regexEmail)) {
-        setEmailError(true)
+        wait(ERROR_EMAIL)
         return
       }
 
@@ -128,7 +136,7 @@ export default function SignInPage() {
                 onChange={(e) => handleChange(e)}
                 value={dataForm.email}
               />
-              {emailError && <span className="block border border-red-600 bg-red-700 text-white text-center p-4 mt-2">Email incorrect</span>}
+              {emailError && <span className="block border border-red-600 bg-red-700 text-white text-center p-4 mt-2">Incorrect email</span>}
             </div>
             <div className="text-left font-bold mb-5">
               <label className='block' htmlFor="password">Password</label>
@@ -136,8 +144,8 @@ export default function SignInPage() {
                 onChange={(e) => handleChange(e)}
                 value={dataForm.password}
               />
-              {serverError && <span className="block border border-red-600 bg-red-700 text-white text-center p-4 mt-2">Votre mot de passe ou votre email est incorrect, veuillez vérifier ces informations</span>}
-              {loginError && <span className="block border border-red-600 bg-red-700 text-white text-center p-4 mt-2">Nous avons rencontré un problème pour contacter le serveur, veuillez réessayer ultérieurement</span>}
+              {serverError && <span className="block border border-red-600 bg-red-700 text-white text-center p-4 mt-2">Your password or email is incorrect, please check this information</span>}
+              {loginError && <span className="block border border-red-600 bg-red-700 text-white text-center p-4 mt-2">We had a problem contacting the server, please try again later</span>}
             </div>
             <div className="text-left mb-5">
               <input type="checkbox" name="rememberMe" id="rememberMe" 
