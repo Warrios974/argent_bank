@@ -24,7 +24,7 @@ export default function Header() {
   function handleLogOut(e: React.MouseEvent<HTMLElement>): void {
     e.preventDefault();
     dispatch(logOut());
-    router.push('/signin')
+    router.push('/')
   }
   
   useEffect(() => {
@@ -35,9 +35,6 @@ export default function Header() {
         const connexionData = JSON.parse(tokenInlocalStorage)
         dispatch(addToken(connexionData))
         dispatch(fetchUserData(connexionData.token))
-        /*PUT /account/{id}/transactions
-        PUT/transaction/{id}
-        POST /transaction/{id}*/
       }
       if (tokenInSessionStorage) {
         const connexionData = JSON.parse(tokenInSessionStorage)
@@ -47,13 +44,6 @@ export default function Header() {
     }
     connexionFunction()
   }, [])
-
-  console.log('====');
-  console.log('token',token);
-  console.log('====');
-  console.log('====');
-  console.log('error',error);
-  console.log('====');
 
   return (
     <header className="w-full flex flex-row justify-between items-center px-5 py-2">
