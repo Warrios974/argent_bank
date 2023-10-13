@@ -54,7 +54,7 @@ export default function DashboardPage() {
     redirectfunction()
   }, [token])
 
-  return (
+  if(token) return (
     <>
       <section className="h-full flex flex-col items-center pt-10 bg-background-primary">
         <h1 className="text-4xl text-white mb-4 font-medium text-center">Welcome back <br/> {firstName + " " + lastName} !</h1>
