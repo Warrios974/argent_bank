@@ -10,7 +10,7 @@ export default function TransactionCard({ type, sum, state} : TransactionInfoPro
             <span>{state}</span>
         </div>
         <div className="w-full mt-5 text-right md:mt-O">
-            <button className="btn-primary">View transactions</button>
+            <button className="btn-primary cursor-pointer">View transactions</button>
         </div>
     </div>
   )

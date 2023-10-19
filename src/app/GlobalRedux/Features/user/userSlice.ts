@@ -66,9 +66,12 @@ export const userSlice = createSlice({
             state.lastName = lastName
         },
         logOut : (state) => { 
-            state.firstName = null
-            state.lastName = null
-            state.token = null
+            state.firstName  = null,
+            state.lastName  = null,
+            state.token  = null,
+            state.loading  = null,
+            state.error = null,
+            state.rememberMe = false
         },
         addToken : (state, action) => {
           state.token = action.payload.token

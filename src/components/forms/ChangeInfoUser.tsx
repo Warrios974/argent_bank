@@ -50,10 +50,10 @@ export default function ChangeInfoUser({ displayForm } : ChangeInfoUserProps) {
   return (
     <form className="w-10/12 flex flex-col items-center gap-4" onSubmit={(e) => handleSubmit(e)}>
         <fieldset className="w-full flex flex-col md:flex-row md:justify-center gap-4">
-            <input type="text" id="firstName" placeholder={firstName ? firstName : ''} pattern="[A-Za-z]{2,32}" minLength={2}
+            <input type="text" id="firstName" placeholder={firstName ? firstName : ''} pattern="[\p{L}]{2,32}" minLength={2}
                 className="input" onChange={(e) => handleChange(e)}
                 />
-            <input type="text" id="lastName" placeholder={lastName ? lastName : ''} pattern="[A-Za-z]{2,32}" minLength={2}
+            <input type="text" id="lastName" placeholder={lastName ? lastName : ''} pattern="[\p{L}]{2,32}" minLength={2}
                 className="input" onChange={(e) => handleChange(e)}
                 />
         </fieldset>
